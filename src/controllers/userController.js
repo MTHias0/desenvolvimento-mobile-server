@@ -1,15 +1,13 @@
 const user = require('../models/user');
-const jwt = require('jsonwebtoken');
 
 const createUser = async (req, res) => {
-    const { name, email, password, address, telNumber } = req.body;
+    const { name, email, password, telNumber } = req.body;
 
     try{
         const response = await user.create({
             name: name,
             email: email,
             password: password,
-            address: address,
             telNumber: telNumber,
         });
 
@@ -21,29 +19,6 @@ const createUser = async (req, res) => {
         .status(500)
         .json({ message: "Não foi possível efetuar a criação do usuário..." });
     }
-}
-
-const login = async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const loggedUser = await user.findOne({ email });
-
-   const isPasswordValid = password === loggedUser.password;
-
-    if(!isPasswordValid) {
-
-      return res.status(401).json({ message: 'Login ou senha inválidos'});
-    }
-
-    const token = jwt.sign({ userId: loggedUser._id }, 'your-secret-key', { expiresIn: '1h'});
-    
-    return res.json({ token });
-
-  } catch (err) {
-    
-    return res.status(500).json({ error: err.message });
-  }
 }
 
 const addFavorite = async (req, res) => {
@@ -170,4 +145,4 @@ const getHistory = async (req, res) => {
   }
 }
 
-module.exports = { createUser, addFavorite, removeFavorite, getFavorites, login, createOrder, getOrders, getHistory };
+module.exports = { createUser, addFavorite, removeFavorite, getFavorites, createOrder, getOrders, getHistory };
