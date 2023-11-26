@@ -1,0 +1,22 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Local development settings
+.env
+
+# Editor/IDE settings
+.vscode/
+.idea/
+
+# Dependency lock files
+package-lock.json
+yarn.lock
+
+# OS and text editor temporary files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
