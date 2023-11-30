@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true},
     email: { type: String, required: true },
     telNumber: { type: Number, required: true },
+    isAdmin: { type: Boolean, required: true},
     favorites: [{
         type: { 
             _id: mongoose.Schema.Types.ObjectId,
