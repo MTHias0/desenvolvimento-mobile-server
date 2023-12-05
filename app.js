@@ -14,6 +14,6 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(routes);
 
-app.listen(3000, ()=> {
-    console.log('Servidor foi iniciado na porta 3000');
+app.listen(3259, ()=> {
+    console.log('Servidor foi iniciado na porta 3259');
 });
