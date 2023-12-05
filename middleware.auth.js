@@ -4,7 +4,7 @@ require("dotenv").config();
 const user = require("./src/models/user");
 
 const login = async (req, res) => {
-  console.log('here')
+  // console.log('here')
   const { email, telNumber, password } = req.body;
   const secret = process.env.SECRET_KEY;
   let data;
@@ -30,7 +30,7 @@ const login = async (req, res) => {
 
     const loggedUser = await user.findOne(data);
 
-    console.log(loggedUser)
+    // console.log(loggedUser)
 
     if (!loggedUser) {
       return res.status(204).json({ message: "Login ou senha incorretos" });
@@ -53,15 +53,15 @@ const getCurrentUser = async (req, res) => {
   if(!token) {
     return res.status(401).json({message: 'Usuário não autorizado' });
   }
-  jwt.verify(token, secret, (err, decoded) => {
+  jwt.verify(token, secret, (err, user) => {
     if (err) {
       console.log(err)
       return res.status(401).json({message: 'token error'});
     }
 
-    const { data } = decoded;
-
-    loggedUserData = data
+    const { data } = user;
+    console.log(user)
+    // loggedUserData = data
   })
 
   const currentUser = await user.findOne(loggedUserData);
