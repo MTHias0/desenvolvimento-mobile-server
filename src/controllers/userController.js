@@ -1,12 +1,13 @@
 const user = require('../models/user');
 
 const createUser = async (req, res) => {
-    const { name, email, password, telNumber } = req.body;
+    const { name, email, address, password, telNumber } = req.body;
 
     try{
         const response = await user.create({
             name: name,
             email: email,
+            address: address,
             password: password,
             telNumber: telNumber,
         });
@@ -21,13 +22,37 @@ const createUser = async (req, res) => {
     }
 }
 
+const updateUser = async (req, res) => {
+  const { userId, username, email, password, address, telNumber } = req.body
+  
+  try {
+    const updatedUser = await user.findOneAndUpdate(
+      { _id: userId },
+      { $set: { "name": username, "email": email, "password": password,
+      "address": address, "telNumber": telNumber} },
+      { new : true }
+    );
+
+    return res.status(200).json(updatedUser);
+  } catch (err) {
+    
+    return res.status(500).json({ error: err.message });
+  }
+}
+
 const addFavorite = async (req, res) => {
-    const { userId, productId, productName, price } = req.body;
+    const { userId, productId, name, description, image, price } = req.body;
 
   try {
+    const isFavorite = await user.findOne({ _id: userId, 'favorites._id': productId });
+
+    if(isFavorite) {
+      return res.status(400).json({ message: 'produto já é favorito '});
+    }
+
     const updatedUserFavorites = await user.findOneAndUpdate(
       { _id: userId },
-      { $push: { favorites: { _id: productId, name: productName, price } } },
+      { $push: { favorites: { _id: productId, name: name, description: description, image: image, price: price } } },
       { new: true }
     );
 
@@ -40,12 +65,11 @@ const addFavorite = async (req, res) => {
 }
 
 const removeFavorite = async (req, res) => {
-    const { userId, productId, productName } = req.body;
-
+    const { userId, productId } = req.body;
   try {
     const updatedUserFavorites = await user.findOneAndUpdate(
       { _id: userId },
-      { $pull: { favorites: { _id: productId, name: productName }}},
+      { $pull: { favorites: { _id: productId }}},
       { new: true }
     );
 
@@ -57,7 +81,7 @@ const removeFavorite = async (req, res) => {
 }
 
 const getFavorites = async (req, res) => {
-  const { userId } = req.body;
+  const { userId } = req.query;
     try{
         const userFavorites = await user.findOne({ _id: userId });
         if(!userFavorites) {
@@ -145,4 +169,4 @@ const getHistory = async (req, res) => {
   }
 }
 
-module.exports = { createUser, addFavorite, removeFavorite, getFavorites, createOrder, getOrders, getHistory };
+module.exports = { createUser, updateUser, addFavorite, removeFavorite, getFavorites, createOrder, getOrders, getHistory };

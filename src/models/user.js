@@ -12,6 +12,8 @@ const userSchema = new mongoose.Schema({
             _id: mongoose.Schema.Types.ObjectId,
             name: String,
             price: Number,
+            description: String,
+            image: String
         },
         ref: 'Product',
         required: false
