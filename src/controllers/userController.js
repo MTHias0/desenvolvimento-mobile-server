@@ -124,7 +124,7 @@ const createOrder = async (req, res) => {
 const getOrders = async (req, res) => {
   const { userId } = req.body;
   try {
-    const userOrders = await user.findOne({ _id: userId })
+    const userOrders = await user.findOne({ _id: userId });
 
     const inProgressOrders = userOrders.orders.filter(order => order.status === "Em andamento");
     
@@ -145,8 +145,33 @@ const getOrders = async (req, res) => {
   }
 }
 
-const getHistory = async (req, res) => {
+const clearOrder = async (req, res) => {
   const { userId } = req.body;
+
+  try {
+    const gettedUser = await user.findById(userId);
+
+    if (!gettedUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    gettedUser.orders.forEach((order) => {
+      if (order.status === 'Em andamento') {
+        order.status = 'Finalizado';
+      }
+    });
+
+    await gettedUser.save();
+
+    res.status(200).json({ message: 'Orders updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+const getHistory = async (req, res) => {
+  const { userId } = req.query;
   try {
     const userOrders = await user.findOne({ _id: userId })
 
@@ -169,4 +194,4 @@ const getHistory = async (req, res) => {
   }
 }
 
-module.exports = { createUser, updateUser, addFavorite, removeFavorite, getFavorites, createOrder, getOrders, getHistory };
+module.exports = { createUser, updateUser, addFavorite, removeFavorite, getFavorites, createOrder, getOrders, getHistory, clearOrder };

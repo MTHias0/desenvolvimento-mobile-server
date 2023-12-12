@@ -2,9 +2,10 @@ const express = require('express');
 const router = express();
 
 const { authenticateToken } = require('../../middleware.auth')
-const { createUser, updateUser, addFavorite, removeFavorite, getFavorites, createOrder, getOrders, getHistory } = require('../controllers/userController');
+const { createUser, updateUser, addFavorite, removeFavorite, getFavorites, createOrder, getOrders, getHistory, clearOrder } = require('../controllers/userController');
 
 router.post("/create-user", createUser);
+router.put("/clear-orders", clearOrder);
 router.put("/update", updateUser);
 router.post("/add-favorite", addFavorite);
 router.delete("/remove-favorite", removeFavorite);
